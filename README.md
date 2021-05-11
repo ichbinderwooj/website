@@ -130,7 +130,7 @@ This endpoint will create a new post in the specified board as the owner of the 
 |content     |string      |
 
 Upon a successful request, this will return a status code of 201.
-### `code GET /info`
+#### `GET /info`
 Upon successful authorization, this endpoint returns a JSON with the following values: 
 |Key         |Value       |
 |------------|------------|
