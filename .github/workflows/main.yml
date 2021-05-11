@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Send to sonwoojin.com
-        run: "curl -X \"POST\" -d \"title=New+Release\" -d \"content=There+was+a+new+release+of+this+website!\" -H \"Authorization: ${{secrets.SWJ_TOKEN}}\" \"http://sonwoojin.com/community/board/announcements\""
+        run: "curl -X \"POST\" -d \"title=New+Release\" -d \"content=There+was+a+new+release+of+this+website!\" -H \"Authorization: ${{secrets.SWJ_TOKEN}}\" \"http://sonwoojin.com/api/board/announcements\""
