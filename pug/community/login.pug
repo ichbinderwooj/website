@@ -1,0 +1,18 @@
+form(name="login" action="/community/login" method="post")
+    table 
+        tr 
+            td 
+                label E-mail or username
+            td 
+                input(name="user" type="text" required)
+        tr 
+            td 
+                label Password 
+            td 
+                input(name="password" type="password" required)
+        tr
+            td(colspan="2" class="err-text")
+                if err 
+                    p A user with those credentials does not exist.
+    input(type="submit" value="Login")
+    p Don't have an account? #[a(href="/community/register") Register here]

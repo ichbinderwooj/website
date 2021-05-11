@@ -1,0 +1,14 @@
+- var action = isEdit ? `/community/board/${board}/${id}` : `/community/board/${board}/write`
+form(name="write" action=action method="post")
+    table
+        tr 
+            td
+                label Title 
+            td 
+                input(name="title" type="text" required value=title)
+        tr 
+            td 
+                label Content
+            td 
+                textarea(name="content" required rows="20")=content
+    input(type="submit" value="Submit post")

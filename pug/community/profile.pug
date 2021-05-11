@@ -1,0 +1,25 @@
+p=username
+p !{biography} 
+if isSelf 
+    if userPerms >= 2
+        a(href="/community/edit-profile")
+            button Edit profile
+    if userPerms >= 2
+        h2 API Token
+        if token 
+            p#token(style="display:none;")=token
+            button#token_btn Show/Hide token
+            form(action="/api/generate-token" method="post")
+                input(type="submit" value="Regenerate a token")
+        else 
+            form(action="/api/generate-token" method="post")
+                input(type="submit" value="Generate a token")
+    h2 Change password 
+    a(href="/community/change-password")
+        button Change password
+    h2 Delete account
+    form(action="/community/delete-account" method="post")
+        label Password: 
+        input(type="password" name="password")
+        br
+        input(type="submit" value="Delete account" style="background-color: #dd0000")

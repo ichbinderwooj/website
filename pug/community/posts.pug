@@ -1,0 +1,16 @@
+if isLoggedIn 
+    a(href=`/community/board/${board}/write`)
+        button New post
+p
+table.fill
+    tr 
+        th(width="10%") Author 
+        th(width="80%") Title 
+        th(width="10%") Write Time
+    each post in posts
+        tr 
+            td 
+                a(href=`/community/profile/${post.author_id}`)=post.username
+            td
+                a(href=`/community/board/${board}/${post.id}`)=post.title 
+            td=post.write_time

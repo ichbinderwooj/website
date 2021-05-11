@@ -1,0 +1,39 @@
+form(name="register" action="/community/register" method="post")
+    table 
+        tr 
+            td 
+                label E-mail 
+            td 
+                input(name="email" type="email" required)
+        tr 
+            td(colspan="2" class="err-text")
+                if emailErr
+                    p This E-mail is taken.
+        tr 
+            td 
+                label Username 
+            td 
+                input(name="username" type="text" required)
+        tr 
+            td(colspan="2" class="err-text") 
+                if usernameErr 
+                    p This username is taken.
+        tr 
+            td 
+                label Password 
+            td 
+                input(name="password" type="password" required)
+        tr
+            td(colspan="2" class="err-text")
+                if passwordErr 
+                    p The passwords do not match.
+        tr 
+            td 
+                label Confirm Password 
+            td 
+                input(name="confirm_password" type="password" required)
+        tr
+            td(colspan="2") 
+                p By registering, you agree to the #[a(href="/privacy-policy") privacy policy].
+    input(type="submit" value="Register")
+    p Already have an account? #[a(href="/community/login") Login here]

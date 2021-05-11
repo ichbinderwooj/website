@@ -1,0 +1,8 @@
+if permissions == 6
+    a(href="/blog/write")
+        button Write new blogpost
+each post in posts 
+    h2 
+        a(href=`/blog/read/${post.id}`)=post.title 
+    p on: #{post.write_time}
+    p !{post.content.substr(0, 5000)}

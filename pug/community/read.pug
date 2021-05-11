@@ -1,0 +1,20 @@
+p by: #{author}
+p on: #{writeTime}
+p !{content} 
+if isAuthor 
+    a(href=`/community/board/${board}/${id}/edit`)
+        button Edit post
+    form(name="delete_post" action=`/community/board/${board}/${id}/delete` method="post")
+        input(type="submit" value="Delete post")
+each comment in comments 
+    p by: #{comment.username}
+    p on: #{comment.write_time}
+    p !{comment.content}
+    if comment.isAuthor 
+        form(name="delete_comment" action=`/community/board/${board}/comment/${comment.id}/delete` method="post")
+            input(type="submit" value="Delete post")
+if userPerms >= 2
+    form(name="write_comment" action=`/community/board/${board}/${id}/comment` method="post")
+        textarea(name="comment" rows="20")
+        br
+        input(type="submit" value="Submit comment")

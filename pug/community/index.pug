@@ -1,0 +1,19 @@
+p Welcome to the community section 
+a(href="/community/register")
+    button Register 
+a(href="/community/login")
+    button Log in / Log out
+table.fill
+    thead 
+        tr 
+            th(width="10%") Author 
+            th(width="80%") Title 
+            th(width="10%") Write Time 
+    tbody 
+        each post in posts 
+            tr 
+                td 
+                    a(href=`/community/profile/${post.author_id}`)=post.username
+                td 
+                    a(href=`/community/board/${post.board}/${post.id}`)=post.title
+                td=post.write_time

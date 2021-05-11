@@ -1,0 +1,15 @@
+p Here is a list of some of my YouTube videos.
+table.fill
+    tr 
+        th(width="10%") Thumbnail 
+        th(width="80%") Title 
+        th(width="10%") Published at
+    each video in videos
+        - publishDate = new Date(video.contentDetails.videoPublishedAt)
+        tr 
+            td 
+                img(src=video.snippet.thumbnails.medium.url width="100%")
+            td 
+                a(href=`https://youtube.com/watch?v=${video.contentDetails.videoId}`)=video.snippet.title
+            td 
+                p=publishDate

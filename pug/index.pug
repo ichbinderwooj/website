@@ -1,0 +1,75 @@
+doctype html 
+html(lang="en")
+    head 
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(rel="icon" type="image/png" href="/img/icon.png")
+        link(rel="stylesheet" href="/style.css")
+        link(href="/lib/prism/prism.css" rel="stylesheet")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+        script(src="https://kit.fontawesome.com/9fc43f851c.js" crossorigin="anonymous")
+        script(src="/lib/prism/prism.js")
+        title=title
+    body 
+        .head-heading
+            .head-left 
+                h1
+                    a(href="/") SONWOOJIN
+        .navbar 
+            .head-icon 
+                i.fas.fa-bars 
+            ul
+                li 
+                    if navbar.music
+                        a.active(href="/music") Music
+                    else 
+                        a(href="/music") Music
+                li 
+                    if navbar.youtube
+                        a.active(href="/youtube") YouTube
+                    else 
+                        a(href="/youtube") YouTube
+                li 
+                    if navbar.other
+                        a.active(href="/other") Other
+                    else 
+                        a(href="/other") Other
+                li 
+                    if navbar.community
+                        a.active(href="/community") Community
+                    else 
+                        a(href="/community") Community
+                li 
+                    if navbar.blog
+                        a.active(href="/blog") Blog
+                    else 
+                        a(href="/blog") Blog
+                if req.session.permissions >= 3
+                    li 
+                        if navbar.admin 
+                            a.active(href="/admin") Admin
+                        else 
+                            a(href="/admin") Admin
+        each popup in popups 
+            if popup 
+                div !{popup.toHTML()}
+        .body 
+            .body-textbox 
+                .body-textbox-content
+                    div 
+                        h1=header
+                        div !{content}
+            footer.footer 
+                .footer-content
+                    .footer-logo
+                        a(href="/")
+                            img(src="/img/logo.png" alt="sonwoojin")
+                        p © 2021 Woojin Son under the MIT License
+                    .footer-links#footer-links
+                        p 
+                            a(href="/privacy-policy") Privacy Policy 
+                        p 
+                            a(href="/acknowledgements") Acknowledgements
+                        p 
+                            a(href="/license") License
+        script(src="/script.js")

@@ -1,0 +1,157 @@
+p The sonwoojin.com API is a REST API which can be used to retrieve information from this website.
+section(id="getting-started")
+    h2 Getting started 
+    p To use the API, you must obtain a token. You can get a token from your #[a(href="/community/profile") profile].
+section(id="body")
+    h2 Request Body 
+    p All requests have to be made in the urlencoded format.
+section(id="authorization")
+    h2 Authorization
+    p To access the API, you need to include the following header: 
+    code "Authorization: yourToken"
+    p If there is no authorization header or the token does not exist, the API will return a status code of 401 with the following message: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Unauthorized"
+            |}
+section(id="rate-limiting")
+    h2 Rate limiting
+    p To prevent spam, each user is limited to 60 uses per minute. If you run out of uses and make a request, the API will return a status code of 429 with the following message: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Too many requests"
+            |}
+section(id="wrappers")
+    h2 Wrappers 
+    p API Wrappers have been made to make the use of this API easier (although no one will use this).
+    h3 Python 
+    code pip install sonwoojin 
+    h3 PHP 
+    code composer require ichbinderwooj/sonwoojin
+section(id="reference")
+    h2 Reference 
+    p The base url of this API is #[code http://sonwoojin.com/api]
+    h3 #[code GET /user/{userID}] 
+    p Upon successful authorization and assuming a user with that ID exists, this will return a JSON with the following values: 
+    table.fill
+        thead
+            tr 
+                th Key 
+                th Value 
+        tbody
+            tr 
+                td id 
+                td int 
+            tr 
+                td username 
+                td string 
+            tr 
+                td permissions 
+                td int 
+            tr 
+                td biography 
+                td string
+    p For example: 
+    pre
+        code.language-json
+            |{
+            |    "id": 1,
+            |    "username": "ichbinderwooj",
+            |    "permissions": 6,
+            |    "biography": null
+            |}
+    p If a user with that ID does not exist, it will return a 404 status code with this JSON: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Not found"
+            |}
+    h3 #[code GET /board/{board}/{postID}]
+    p This endpoint fetches a post. The #[code board] parameter specifies which board should be queried. It can be either #[code forum] or #[code announcements]. Upon successful authorization and assuming the specified post exists, this will return the following values: 
+    table.fill
+        thead
+            tr 
+                th Key 
+                th Value 
+        tbody
+            tr 
+                td id 
+                td int 
+            tr 
+                td title 
+                td string 
+            tr 
+                td author_id
+                td int 
+            tr 
+                td content 
+                td string 
+            tr 
+                td write_time 
+                td timestamp 
+            tr 
+                td comments 
+                td array of comment objects
+    p For example: 
+    pre
+        code.language-json
+            |{
+            |    "id": 1,
+            |    "title": "thPoéo thCocán Altorn Onécmdf Bec Bftf"
+            |    "author_id": 1,
+            |    "content": "Cocánb altort, ürpenîtort ürodictort ürişêxu áaç tivitin volvinãp plicat īóopaioc onşt rictiot thpení otês ticlen onkdd cłdeğse egřbk degsbáal fýhginkf bňdřbň lobec seřbsi. Thîmain vòlvdir ectlpá infuác tiviti, esücağ énitap iercinŵap, lagenít, aspan, kiñşqué ezinb, albüs tingen, itafløg, ginürethrap, latickłt ortú, rerotielec trøstim ulatiok, néeinok ickinnons dýce gýhlgşjħd sbłggħx cýdłggh gildggłg ghlhýd efegč fňřg gřbgg. Thrécipie nosûcác tiviti émareç eivdir ecphýş icaple asurvim asochísœ, motionâp leasürt hrouğe rôti chumili, atióok noŵledgt hath plaipléa sint sadis tidomin antnon ectifbh dşjýčeğtflħe hačmir bliehhğclčfň křbeit decýds bgho báachth. Manóth éspraç tičecarrsiğ nifîca nħéal trisk nonýdf béesi yetkħfse.",
+            |    "write_time": "2021-05-05T23:58:24.000Z",
+            |    "comments": [
+            |        {
+            |            "id": 3,
+            |            "author_id": 1,
+            |            "content": "This is a comment.",
+            |            "write_time": "2021-05-06T19:05:15.000Z"
+            |        }
+            |    ]
+            |}
+    p If a post in that board with that ID does not exist, it will return a 404 status code with this JSON: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Not found"
+            |}
+    h3 #[code POST /board/{board}]
+    p This endpoint will create a new post in the specified board as the owner of the token with the given parameters. This takes in the following parameters: 
+    table.fill
+        thead 
+            tr 
+                th Key 
+                th Value 
+        tbody 
+            tr 
+                td title 
+                td string 
+            tr 
+                td content 
+                td string 
+    p Upon a successful request, this will return a status code of 201.
+    h3 #[code GET /info]
+    p Upon successful authorization, this endpoint returns a JSON with the following values: 
+    table.fill
+        thead
+            tr 
+                th Key 
+                th Value 
+        tbody
+            tr 
+                td user_perms
+                td int 
+            tr 
+                td uses 
+                td int
+    p For example: 
+    pre
+        code.language-json
+            |{
+            |    "userPerms": 2,
+            |    "uses": 8
+            |}
+    p Oh dear, this person's running out of uses!

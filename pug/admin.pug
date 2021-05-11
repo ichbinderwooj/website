@@ -1,0 +1,15 @@
+ul
+    if permissions == 6
+        li 
+            a(href="#env") Environment Variables
+if permissions == 6
+    section(id="env")
+        h2 Environment Variables
+        table.fill
+            tr
+                th(width="50%") Key 
+                th(width="50%") Value 
+            each key, val in env 
+                tr 
+                    td=val
+                    td=key 

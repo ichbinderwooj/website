@@ -1,0 +1,36 @@
+form(name="edit_profile" action="/community/edit-profile" method="post")
+    input(type="hidden" name="id", value=userID)
+    table 
+        tr 
+            td 
+                label Username
+            td 
+                input(type="text" name="username" value=username required)
+        tr 
+            td(colspan="2" class="err-text") 
+                if usernameErr 
+                    p This username is taken.
+        tr 
+            td 
+                label E-mail 
+            td 
+                input(type="email" name="email" value=email required)
+        tr 
+            td(colspan="2" class="err-text")
+                if emailErr
+                    p This E-mail is taken.
+        tr 
+            td 
+                label Biography
+            td 
+                textarea(name="biography" rows="20")=biography
+        tr 
+            td 
+                label Password 
+            td 
+                input(type="password" name="password" required)
+        tr 
+            td(colspan="2" class="err-text")
+                if passwordErr
+                    p The password is incorrect.
+    input(type="submit" value="Edit profile")
