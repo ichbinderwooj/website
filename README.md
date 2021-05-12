@@ -130,6 +130,26 @@ This endpoint will create a new post in the specified board as the owner of the 
 |content     |string      |
 
 Upon a successful request, this will return a status code of 201.
+#### `PATCH /board/{board}/{postID}`
+Upon successful authorization, this endpoint edits the specified post and returns the data regarding the submitted post. (See `POST /board/{board}`). If the post does not exist, this will return: 
+```json
+{
+    "message": "Not found"
+}
+```
+#### `DELETE /board/{board}/{postID}`
+Upon successful authorization, this endpoint deletes the specified post and returns this with a status code of 204: 
+```json
+{
+    "message": "No content"
+}
+```
+If the post does not exist, this will return: 
+```json
+{
+    "message": "Not found"
+}
+```
 #### `GET /info`
 Upon successful authorization, this endpoint returns a JSON with the following values: 
 |Key         |Value       |

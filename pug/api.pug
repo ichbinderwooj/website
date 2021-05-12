@@ -119,7 +119,7 @@ section(id="reference")
             |    "message": "Not found"
             |}
     h3 #[code POST /board/{board}]
-    p This endpoint will create a new post in the specified board as the owner of the token with the given parameters. This takes in the following parameters: 
+    p This endpoint will create a new post in the specified board as the owner of the token with the given parameters. This takes in the following parameters in the body: 
     table.fill
         thead 
             tr 
@@ -132,7 +132,27 @@ section(id="reference")
             tr 
                 td content 
                 td string 
-    p Upon a successful request, this will return a status code of 201.
+    p Upon a successful request, this will return a status code of 201 and the following values: 
+    h3 #[code PATCH /board/{board}/{postID}]
+    p Upon successful authorization, this endpoint edits the specified post and returns the data regarding the submitted post. (See #[code POST /board/{board}]). If the post does not exist, this will return: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Not found"
+            |}
+    h3 #[code DELETE /board/{board}/{postID}]
+    p Upon successful authorization, this endpoint deletes the specified post and returns this with a status code of 204: 
+    pre
+        code.language-json
+            |{
+            |    "message": "No content"
+            |}
+    p If the post does not exist, this will return: 
+    pre
+        code.language-json
+            |{
+            |    "message": "Not found"
+            |}
     h3 #[code GET /info]
     p Upon successful authorization, this endpoint returns a JSON with the following values: 
     table.fill
@@ -151,7 +171,7 @@ section(id="reference")
     pre
         code.language-json
             |{
-            |    "userPerms": 2,
+            |    "user_perms": 2,
             |    "uses": 8
             |}
     p Oh dear, this person's running out of uses!

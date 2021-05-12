@@ -83,7 +83,13 @@ module.exports = function (app, dir) {
     
     app.post("/api/generate-token", function (req, res) {
         database.query("SELECT token FROM tokens WHERE user_id = ?", [req.session.userID], function(err, result, fields) {
-            if (err) discord.logErr(err);
+            if (err) {
+                discord.logErr(err);
+                res.status(500).send({
+                    message: "Internal server error"
+                });
+                return;
+            }
             let token = bcrypt.hashSync(Math.floor(Math.random() * 1000000).toString(), 10).replace(/\$./g, "");
             if (result.length == 0) {
                 database.query("INSERT INTO tokens (user_id, user_perms, token) VALUES (?, ?, ?)", [req.session.userID, req.session.permissions, token], function(err, result, fields) {
@@ -103,7 +109,13 @@ module.exports = function (app, dir) {
     app.get("/api/user/:id", function (req, res) {
         validate(req, res, function () {
             database.query("SELECT id, username, permissions, biography FROM users WHERE id=?", [req.params.id], function (err, result, fields) {
-                if (err) discord.logErr(err);
+                if (err) {
+                    discord.logErr(err);
+                    res.status(500).send({
+                        message: "Internal server error"
+                    });
+                    return;
+                }
                 if (result == []) {
                     res.status(404).send({
                         message: "Not found"
@@ -136,7 +148,13 @@ module.exports = function (app, dir) {
                     return;
             }
             database.query("SELECT * FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
-                if (err) discord.logErr(err);
+                if (err) {
+                    discord.logErr(err);
+                    res.status(500).send({
+                        message: "Internal server error"
+                    });
+                    return;
+                }
                 if (result == []) {
                     res.status(404).send({
                         message: "Not found"
@@ -207,13 +225,114 @@ module.exports = function (app, dir) {
             });
         });
     });
+
+    app.patch("/api/board/:board/:id", function(req, res) {
+        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function(err, result, fields) {
+            if (err) {
+                discord.logErr(err);
+                res.status(500).send({
+                    message: "Internal server error"
+                });
+                return;
+            }
+            user = result[0].user_id;
+            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+                if (err) {
+                    discord.logErr(err);
+                    res.status(500).send({
+                        message: "Internal server error"
+                    });
+                    return;
+                }
+                author = result[0].author_id;
+                if (user == author) {
+                    database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, req.body.content, req.params.id], function(err, result, fields) {
+                        if (err) {
+                            discord.logErr(err);
+                            res.status(500).send({
+                                message: "Internal server error"
+                            });
+                            return;
+                        }
+                        else {
+                            if (result.length != 0) {
+                                database.query("SELECT * FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
+                                    res.status(201).send(result[0]);
+                                });
+                            }
+                            else {
+                                res.status(404).send({
+                                    message: "Not found"
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    res.status(403).send({
+                        message: "Forbidden"
+                    });
+                }
+            });
+        });
+    });
+
+    app.delete("/api/board/:board/:id", function(req, res) {
+        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function(err, result, fields) {
+            if (err) {
+                discord.logErr(err);
+                res.status(500).send({
+                    message: "Internal server error"
+                });
+                return;
+            }
+            user = result[0].user_id;
+            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+                if (err) {
+                    discord.logErr(err);
+                    res.status(500).send({
+                        message: "Internal server error"
+                    });
+                    return;
+                }
+                author = result[0].author_id;
+                if (user == author) {
+                    database.query("DELETE FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+                        if (err) {
+                            discord.logErr(err);
+                            res.status(500).send({
+                                message: "Internal server error"
+                            });
+                            return;
+                        }
+                        if (result.length != 0) {
+                            res.status(204).send({
+                                message: "No content"
+                            });
+                        }
+                        else {
+                            res.status(404).send({
+                                message: "Not found"
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
     
     app.get("/api/info", function (req, res) {
         validate(req, res, function () {
             database.query("SELECT user_perms, uses FROM tokens WHERE token = ?", [req.header("Authorization")], function (err, result, fields) {
-                if (err) discord.logErr(err);
+                if (err) {
+                    discord.logErr(err);
+                    res.status(500).send({
+                        message: "Internal server error"
+                    });
+                    return;
+                }
                 res.send({
-                    userPerms: result[0].user_perms,
+                    user_perms: result[0].user_perms,
                     uses: result[0].uses
                 });
             });
