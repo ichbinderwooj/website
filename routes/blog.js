@@ -38,7 +38,7 @@ module.exports = function (app, dir) {
         });
     });
 
-    app.get("/blog/read/:id", function(req, res) {
+    app.get("/blog/read/:id", function (req, res) {
         database.query("SELECT * FROM blog WHERE id = ?", [req.params.id], function (err, result, fields) {
             if (err) discord.logErr(err);
             if (result.length != 0) {
@@ -102,11 +102,11 @@ module.exports = function (app, dir) {
         }
     });
 
-    app.post("/blog/write", function(req, res) {
+    app.post("/blog/write", function (req, res) {
         if (req.session.permissions == 6) {
-            database.query("INSERT INTO blog (title, content) VALUES (?, ?)", [req.body.title, req.body.content], function(err, result, fields) {
+            database.query("INSERT INTO blog (title, content) VALUES (?, ?)", [req.body.title, req.body.content], function (err, result, fields) {
                 if (err) discord.logErr(err);
-                database.query("SELECT id FROM blog ORDER BY id DESC LIMIT 1", function(err, result, fields) {
+                database.query("SELECT id FROM blog ORDER BY id DESC LIMIT 1", function (err, result, fields) {
                     if (err) discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/blog/read/${result[0].id}`);
                 });

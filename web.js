@@ -25,8 +25,8 @@ app.set("views", `${dir}/pug`);
 app.set("view engine", "pug");
 
 app.use(express.static(`${dir}/static`));
-app.use(express.urlencoded({ 
-    extended: false 
+app.use(express.urlencoded({
+    extended: false
 }));
 app.use(session({
     secret: config.session.secret,
@@ -173,7 +173,7 @@ app.get("/admin", function (req, res) {
 app.get("/cookie", function (req, res) {
     const day = 1000 * 60 * 60 * 24;
     req.session.cookie.expires = false;
-    res.cookie("acceptedCookies", true, {maxAge: 10000 * day}).send({
+    res.cookie("acceptedCookies", true, { maxAge: 10000 * day }).send({
         message: "OK"
     });
 });

@@ -22,7 +22,7 @@ function validate(req, res, callback) {
                 }
             }
             isAuthorized = isAuthorized ? true : false;
-            if ( _result.uses == 0) {
+            if (_result.uses == 0) {
                 database.query("SELECT id, username FROM users WHERE id = ?", [result[0].user_id], function (err, result, fields) {
                     discord.logWarn("API use note", "Someone made too many requests to the API", {
                         name: `username: ${result[0].username}`,
@@ -80,9 +80,9 @@ module.exports = function (app, dir) {
             content: pug.renderFile(`${dir}/pug/api.pug`)
         });
     });
-    
+
     app.post("/api/generate-token", function (req, res) {
-        database.query("SELECT token FROM tokens WHERE user_id = ?", [req.session.userID], function(err, result, fields) {
+        database.query("SELECT token FROM tokens WHERE user_id = ?", [req.session.userID], function (err, result, fields) {
             if (err) {
                 discord.logErr(err);
                 res.status(500).send({
@@ -92,20 +92,20 @@ module.exports = function (app, dir) {
             }
             let token = bcrypt.hashSync(Math.floor(Math.random() * 1000000).toString(), 10).replace(/\$./g, "");
             if (result.length == 0) {
-                database.query("INSERT INTO tokens (user_id, user_perms, token) VALUES (?, ?, ?)", [req.session.userID, req.session.permissions, token], function(err, result, fields) {
+                database.query("INSERT INTO tokens (user_id, user_perms, token) VALUES (?, ?, ?)", [req.session.userID, req.session.permissions, token], function (err, result, fields) {
                     if (err) discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/community/profile/${req.session.userID}`);
                 });
             }
             else {
-                database.query("UPDATE tokens SET user_perms = ?, token = ?", [req.session.permissions, token], function(err, result, fields) {
+                database.query("UPDATE tokens SET user_perms = ?, token = ?", [req.session.permissions, token], function (err, result, fields) {
                     if (err) discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/community/profile/${req.session.userID}`);
                 });
             }
         });
     });
-    
+
     app.get("/api/user/:id", function (req, res) {
         validate(req, res, function () {
             database.query("SELECT id, username, permissions, biography FROM users WHERE id=?", [req.params.id], function (err, result, fields) {
@@ -131,7 +131,7 @@ module.exports = function (app, dir) {
             });
         });
     });
-    
+
     app.get("/api/board/:board/:id", function (req, res) {
         validate(req, res, function () {
             switch (req.params.board) {
@@ -174,7 +174,7 @@ module.exports = function (app, dir) {
             });
         });
     });
-    
+
     app.post("/api/board/:board", function (req, res) {
         validate(req, res, function () {
             switch (req.params.board) {
@@ -226,8 +226,8 @@ module.exports = function (app, dir) {
         });
     });
 
-    app.patch("/api/board/:board/:id", function(req, res) {
-        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function(err, result, fields) {
+    app.patch("/api/board/:board/:id", function (req, res) {
+        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function (err, result, fields) {
             if (err) {
                 discord.logErr(err);
                 res.status(500).send({
@@ -236,7 +236,7 @@ module.exports = function (app, dir) {
                 return;
             }
             user = result[0].user_id;
-            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
                 if (err) {
                     discord.logErr(err);
                     res.status(500).send({
@@ -246,7 +246,7 @@ module.exports = function (app, dir) {
                 }
                 author = result[0].author_id;
                 if (user == author) {
-                    database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, req.body.content, req.params.id], function(err, result, fields) {
+                    database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, req.body.content, req.params.id], function (err, result, fields) {
                         if (err) {
                             discord.logErr(err);
                             res.status(500).send({
@@ -277,8 +277,8 @@ module.exports = function (app, dir) {
         });
     });
 
-    app.delete("/api/board/:board/:id", function(req, res) {
-        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function(err, result, fields) {
+    app.delete("/api/board/:board/:id", function (req, res) {
+        database.query("SELECT user_id FROM tokens WHERE token = ?", [req.header("Authorization")], function (err, result, fields) {
             if (err) {
                 discord.logErr(err);
                 res.status(500).send({
@@ -287,7 +287,7 @@ module.exports = function (app, dir) {
                 return;
             }
             user = result[0].user_id;
-            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+            database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
                 if (err) {
                     discord.logErr(err);
                     res.status(500).send({
@@ -297,7 +297,7 @@ module.exports = function (app, dir) {
                 }
                 author = result[0].author_id;
                 if (user == author) {
-                    database.query("DELETE FROM ?? WHERE id = ?", [req.params.board, req.params.id], function(err, result, fields) {
+                    database.query("DELETE FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
                         if (err) {
                             discord.logErr(err);
                             res.status(500).send({
@@ -320,7 +320,7 @@ module.exports = function (app, dir) {
             });
         });
     });
-    
+
     app.get("/api/info", function (req, res) {
         validate(req, res, function () {
             database.query("SELECT user_perms, uses FROM tokens WHERE token = ?", [req.header("Authorization")], function (err, result, fields) {

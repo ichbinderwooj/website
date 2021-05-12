@@ -503,7 +503,7 @@ module.exports = function (app, dir) {
         }
     });
 
-    app.post("/community/change-password", function(req, res) {
+    app.post("/community/change-password", function (req, res) {
         if (req.session.isLoggedIn) {
             if (req.body.password == req.body.confirm_password) {
                 newPasswordErr = false;
@@ -511,7 +511,7 @@ module.exports = function (app, dir) {
             else {
                 newPasswordErr = true;
             }
-            database.query("SELECT password FROM users WHERE id = ?", [req.session.userID], function(err, result, fields) {
+            database.query("SELECT password FROM users WHERE id = ?", [req.session.userID], function (err, result, fields) {
                 if (err) discord.logErr(err);
                 if (bcrypt.compareSync(req.body.current_password, result[0].password)) {
                     oldPasswordErr = false;
@@ -520,7 +520,7 @@ module.exports = function (app, dir) {
                     oldPasswordErr = true;
                 }
                 if (!oldPasswordErr && !newPasswordErr) {
-                    database.query("UPDATE users SET password = ? WHERE id = ?", [bcrypt.hashSync(req.body.password, 10), req.session.userID], function(err, result, fields) {
+                    database.query("UPDATE users SET password = ? WHERE id = ?", [bcrypt.hashSync(req.body.password, 10), req.session.userID], function (err, result, fields) {
                         if (err) discord.logErr(err);
                         res.redirect(`${req.protocol}://${req.get("host")}/community/profile/${req.session.userID}`);
                     });
