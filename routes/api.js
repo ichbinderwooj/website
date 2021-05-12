@@ -194,7 +194,7 @@ module.exports = function (app, dir) {
                         discord.sendEmbed(channel, {
                             title: req.body.title,
                             color: 0x00ffff,
-                            description: turndown(req.body.content),
+                            description: turndown.turndown(req.body.content),
                             fields: [{
                                 name: "Link:",
                                 value: `http://sonwoojin.com/community/board/${req.params.board}/${result[0].id}`,
