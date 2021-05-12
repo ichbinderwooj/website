@@ -5,6 +5,7 @@ const pug = require("pug");
 const Popup = require("../lib/popup");
 const cookies = require("../lib/cookies");
 const discord = require("../lib/discord");
+const string = require("../lib/string");
 const config = require("../config.json");
 const database = mysql.createConnection(config.mysql);
 
@@ -181,7 +182,7 @@ module.exports = function (app, dir) {
                     });
                     return;
                 }
-                database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, result[0].user_id, req.body.content], function (err, result, fields) {
+                database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, result[0].user_id, string.parsePost(req.body.content)], function (err, result, fields) {
                     if (err) {
                         discord.logErr(err);
                         res.status(500).send({

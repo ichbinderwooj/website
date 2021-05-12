@@ -389,7 +389,7 @@ module.exports = function (app, dir) {
                             usernameErr = true;
                         }
                         if (!passwordErr && !emailErr && !usernameErr) {
-                            database.query("UPDATE users SET username = ?, email = ?, biography = ? WHERE id = ?", [req.body.username, req.body.email, req.body.biography, req.session.userID], function (err, result, fields) {
+                            database.query("UPDATE users SET username = ?, email = ?, biography = ? WHERE id = ?", [req.body.username, req.body.email, string.parsePost(req.body.biography), req.session.userID], function (err, result, fields) {
                                 if (err) sendMsg(err);
                                 res.redirect(`${req.protocol}://${req.get("host")}/community/profile/${req.session.userID}`);
                             });
@@ -694,14 +694,14 @@ module.exports = function (app, dir) {
                 return;
         }
         if (req.session.userID != 0 && req.session.permissions >= minPerms) {
-            database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, req.session.userID, req.body.content], function (err, result, fields) {
+            database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, req.session.userID, string.parsePost(req.body.content)], function (err, result, fields) {
                 if (err) discord.logErr(err);
                 database.query("SELECT id FROM ?? ORDER BY id DESC LIMIT 1", [req.params.board], function (err, result, fields) {
                     if (err) discord.logErr(err);
                     discord.sendEmbed(channel, {
                         title: req.body.title,
                         color: 0x00ffff,
-                        description: turndown(req.body.content),
+                        description: turndown(string.parsePost(req.body.content)),
                         fields: [{
                             name: "Link:",
                             value: `http://sonwoojin.com/community/board/${req.params.board}/${result[0].id}`,
@@ -804,7 +804,8 @@ module.exports = function (app, dir) {
         database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
             if (err) discord.logErr(err);
             if (result[0].author_id == req.session.userID) {
-                database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, req.body.content, req.params.id], function (err, result, fields) {
+                database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, string.parsePost(req.body.content), req.params.id], function (err, result, fields) {
+                    discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/community/board/${req.params.board}/${req.params.id}`);
                 });
             }
@@ -832,7 +833,7 @@ module.exports = function (app, dir) {
             if (err) discord.logErr(err);
             if (result[0].author_id == req.session.userID) {
                 database.query("DELETE FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
-                    if (err) throw err;
+                    if (err) discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/community/board/${req.params.board}`);
                 });
             }
