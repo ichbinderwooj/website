@@ -189,7 +189,7 @@ function validate(req, res, callback) {
         if (err) discord.logErr(err);
         if (req.header("Authorization")) {
             for (i = 0; i < result.length; i++) {
-                if (req.header("Authorization") == result[i].token.replace(/\$./g, "")) {
+                if (req.header("Authorization") == result[i].token) {
                     _result = result[i];
                     isAuthorized = true;
                     break;
@@ -257,7 +257,7 @@ app.get("/api", function (req, res) {
 app.post("/api/generate-token", function (req, res) {
     database.query("SELECT token FROM tokens WHERE user_id = ?", [req.session.userID], function(err, result, fields) {
         if (err) discord.logErr(err);
-        let token = bcrypt.hashSync(Math.floor(Math.random() * 1000000).toString(), 10);
+        let token = bcrypt.hashSync(Math.floor(Math.random() * 1000000).toString(), 10).replace(/\$./g, "");
         if (result.length == 0) {
             database.query("INSERT INTO tokens (user_id, user_perms, token) VALUES (?, ?, ?)", [req.session.userID, req.session.permissions, token], function(err, result, fields) {
                 if (err) discord.logErr(err);
