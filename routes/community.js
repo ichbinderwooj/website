@@ -341,7 +341,7 @@ module.exports = function (app, dir) {
                         userID: result[0].id,
                         username: result[0].username,
                         email: result[0].email,
-                        biography: result[0].biography,
+                        biography: string.toMarkdown(result[0].biography),
                         usernameErr: false,
                         emailErr: false,
                         passwordErr: false
@@ -389,7 +389,7 @@ module.exports = function (app, dir) {
                             usernameErr = true;
                         }
                         if (!passwordErr && !emailErr && !usernameErr) {
-                            database.query("UPDATE users SET username = ?, email = ?, biography = ? WHERE id = ?", [req.body.username, req.body.email, string.parsePost(req.body.biography), req.session.userID], function (err, result, fields) {
+                            database.query("UPDATE users SET username = ?, email = ?, biography = ? WHERE id = ?", [req.body.username, req.body.email, string.toHTML(req.body.biography), req.session.userID], function (err, result, fields) {
                                 if (err) sendMsg(err);
                                 res.redirect(`${req.protocol}://${req.get("host")}/community/profile/${req.session.userID}`);
                             });
@@ -694,14 +694,14 @@ module.exports = function (app, dir) {
                 return;
         }
         if (req.session.userID != 0 && req.session.permissions >= minPerms) {
-            database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, req.session.userID, string.parsePost(req.body.content)], function (err, result, fields) {
+            database.query("INSERT INTO ?? (title, author_id, content) VALUES (?, ?, ?)", [req.params.board, req.body.title, req.session.userID, string.toHTML(req.body.content)], function (err, result, fields) {
                 if (err) discord.logErr(err);
                 database.query("SELECT id FROM ?? ORDER BY id DESC LIMIT 1", [req.params.board], function (err, result, fields) {
                     if (err) discord.logErr(err);
                     discord.sendEmbed(channel, {
                         title: req.body.title,
                         color: 0x00ffff,
-                        description: turndown.turndown(string.parsePost(req.body.content)),
+                        description: string.toMarkdown(string.toHTML(req.body.content)),
                         fields: [{
                             name: "Link:",
                             value: `http://sonwoojin.com/community/board/${req.params.board}/${result[0].id}`,
@@ -804,7 +804,7 @@ module.exports = function (app, dir) {
         database.query("SELECT author_id FROM ?? WHERE id = ?", [req.params.board, req.params.id], function (err, result, fields) {
             if (err) discord.logErr(err);
             if (result[0].author_id == req.session.userID) {
-                database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, string.parsePost(req.body.content), req.params.id], function (err, result, fields) {
+                database.query("UPDATE ?? SET title = ?, content = ? WHERE id = ?", [req.params.board, req.body.title, string.toHTML(req.body.content), req.params.id], function (err, result, fields) {
                     discord.logErr(err);
                     res.redirect(`${req.protocol}://${req.get("host")}/community/board/${req.params.board}/${req.params.id}`);
                 });
