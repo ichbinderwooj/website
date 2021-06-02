@@ -15,6 +15,20 @@ each comment in comments
             input(type="submit" value="Delete post")
 if userPerms >= 2
     form(name="write_comment" action=`/community/board/${board}/${id}/comment` method="post")
-        textarea(name="comment" rows="20")
+        .wysiwyg-top
+            table.wysiwyg-table
+                tr 
+                    td.wysiwyg-top-style(onclick="Editor.bold()")
+                        i.fa.fa-bold
+                    td.wysiwyg-top-style(onclick="Editor.italic()")
+                        i.fa.fa-italic
+                    td.wysiwyg-top-style(onclick="Editor.underline()")
+                        i.fa.fa-underline
+                    td.wysiwyg-top-style(onclick="Editor.strike()")
+                        i.fa.fa-strikethrough
+                    td.wysiwyg-top-style(onclick="Editor.code()")
+                        i.fa.fa-code
+        .wysiwyg-textarea
+            textarea#textarea(name="content" required rows="20")=content
         br
         input(type="submit" value="Submit comment")
