@@ -861,6 +861,8 @@ module.exports = function (app, dir) {
             if (err) discord.logErr(err);
             if (result[0].author_id == req.session.userID) {
                 res.render(`${dir}/pug/index.pug`, {
+                    req: req,
+                    res: res,
                     popups: [
                         (!req.cookies.acceptedCookies) ? new Popup(
                             "cookie",
